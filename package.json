@@ -1,0 +1,25 @@
+{
+  "name": "undeleted",
+  "version": "0.0.1",
+  "description": "Application to view deleted messages from Facebook Messenger",
+  "main": "index.js",
+  "scripts": {
+    "test": "test"
+  },
+  "keywords": [
+    "Messenger",
+    "Facebook",
+    "Deleted",
+    "Messages"
+  ],
+  "author": "Michal Bilski",
+  "license": "ISC",
+  "dependencies": {
+    "facebook-chat-api": "github:7osCraft/facebook-chat-api"
+  },
+  "devDependencies": {
+    "clear": "^0.1.0",
+    "terminal-kit": "^1.32.2",
+    "terminal-table": "0.0.12"
+  }
+}
