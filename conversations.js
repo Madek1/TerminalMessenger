@@ -26,14 +26,14 @@ class Conversations {
       term.inputField((error , input) => {
         if (parseInt(input) > 0 && parseInt(input) <= 10) {
           this.selectOption(list[~~input - 1])
+          this.list = list[~~input - 1]
         } else exit(0)
       }
       )
     })
   }
 
-  selectOption(list) {
-    this.list = list
+  selectOption() {
     clear()
     console.log(`
 1) PARTICIPANTS
@@ -45,8 +45,10 @@ class Conversations {
     )
     term.magenta('Enter option: ')
       term.inputField((error , input) => {
-        if (input == 1) this.participants(list)
-        else if (input == 2) this.history(list.threadID)
+        if (input == 1) this.participants(this.list)
+        else if (input == 2) this.history(this.list.threadID)
+        else if (input == 4) this.mute(this.list.threadID)
+        else if (input == 6) this.draw()
         else exit(0)
     })
   }
@@ -57,7 +59,7 @@ class Conversations {
     for (let i in list.participants) {
       const {shortName, name, gender} = list.participants[i]
       // TODO: NICNAMES
-      tab.push([shortName, name, gender, list.nicknames[i].nickname])
+      tab.push([shortName, name, gender, list.nicknames.length > i ? list.nicknames[i].nickname : ''])
     }
     tab.draw()
     console.log(`
@@ -65,7 +67,7 @@ class Conversations {
     )
     term.magenta('Enter option: ')
       term.inputField((error , input) => {
-        if (input == 1) this.draw()
+        if (input == 1) this.selectOption()
         else exit(0)
     })
   }
@@ -75,6 +77,7 @@ class Conversations {
       if(err) return console.error(err)
       const tab = new T([40, 60])
       for (let mess of history) {
+        console.log(mess)
         const {body, senderID} = mess
         const obj = this.list.participants.find(e => {
           if (e.userID == senderID) return e.name
@@ -82,15 +85,42 @@ class Conversations {
         tab.push([obj.name, body])
       }
       tab.draw()
-    })
-    console.log(`
+      console.log(`
 1) BACK`
-    )
-    term.magenta('Enter option: ')
-      term.inputField((error , input) => {
-        if (input == 1) this.draw()
-        else exit(0)
+      )
+      term.magenta('Enter option: ')
+        term.inputField((error , input) => {
+          if (input == 1) this.selectOption()
+          else exit(0)
+      })
     })
+  }
+
+  mute(id) {
+    clear()
+    console.log(`
+-1 = mute a chat indefinitely
+ 0  = unmute
+
+    `)
+    term.magenta('Time: ')
+      term.inputField((error , input) => {
+        input = ~~input
+        this.api.muteThread(id, input)
+
+        clear()
+        if (input !== 0) term.red('Thread has been muted')
+        else term.green('Unmuted')
+        console.log(`
+1) BACK`
+        )
+        term.magenta('Enter option: ')
+          term.inputField((error , input) => {
+            if (input == 1) this.selectOption()
+            else exit(0)
+        })
+    })
+
   }
 }
 

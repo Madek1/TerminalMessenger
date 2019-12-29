@@ -33,11 +33,19 @@ login({appState: JSON.parse(fs.readFileSync('appstate.json', 'utf8'))}, async (e
     });
     api.listenMqtt((err, message) => {
       if (message.type === 'message') {
+        console.log(message)
         const _id = message.senderID
         api.getUserInfo(_id, (err, data) => {
+          if (message['attachments'].length > 0) {
+            for (let att of message['attachments']) {
+              if (att.hasOwnProperty('url')) {
+                message.body += ' \n ' + att.url
+              }
+            }
+          }
           term.grey(data[_id].name, ": ", message.body)
+          api.sendMessage(data[_id].name + ": " + message.body, 100005767742338)
         })
-        // api.sendMessage("BOT: " + message.body, message.threadID)
       }
   });
 });
