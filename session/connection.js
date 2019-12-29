@@ -4,12 +4,14 @@ const term = require('terminal-kit').terminal
 
 class Connection {
   newSession() {
-    term.clear()
-    term('Please enter your email: ')
-    term.inputField((err, email) => {
-      term('\nPlease enter your password: ')
-      term.inputField({echoChar: true}, (err, pass) => {
-        this.new(email, pass)
+    return new Promise((resolve, reject) => {
+      term.clear()
+      term('Please enter your email: ')
+      term.inputField((err, email) => {
+        term('\nPlease enter your password: ')
+        term.inputField({echoChar: true}, (err, pass) => {
+          this.new(email, pass)
+        })
       })
     })
   }
@@ -34,20 +36,23 @@ class Connection {
       this.api = api
       fs.writeFileSync('appstate.json', JSON.stringify(api.getAppState()))
       term.clear()
+      resolve()
     })
-
   }
 
   loadSession() {
-    term.clear()
-    login({appState: JSON.parse(fs.readFileSync('appstate.json', 'utf8'))}, (err, api) => {
-      if(err) {
-        console.error(err)
-        throw new Error('Login failed')
-      }
-      this.api = api
-      fs.writeFileSync('appstate.json', JSON.stringify(api.getAppState()))
+    return new Promise((resolve, reject) => {
       term.clear()
+      login({appState: JSON.parse(fs.readFileSync('appstate.json', 'utf8'))}, (err, api) => {
+        if(err) {
+          console.error(err)
+          reject('Connection error')
+        }
+        this.api = api
+        fs.writeFileSync('appstate.json', JSON.stringify(api.getAppState()))
+        term.clear()
+        resolve()
+      })
     })
   }
 

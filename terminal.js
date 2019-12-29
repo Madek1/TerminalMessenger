@@ -1,6 +1,6 @@
 const term = require( 'terminal-kit' ).terminal
 const conn = require('./session/connection')
-
+const main = require('./src/main')
 term.grabInput()
 
 term.on('key', function(key, matches, data) {
@@ -11,17 +11,19 @@ term.on('key', function(key, matches, data) {
 
 const loadMenu = () => {
   term.clear()
-  term.singleColumnMenu(['LOAD SESSION', 'NEW SESSION', 'LOGOUT'], (err, e) => {
+  term.singleColumnMenu(['LOAD SESSION', 'NEW SESSION', 'LOGOUT'], async (err, e) => {
     if (e.selectedText === 'LOAD SESSION') {
       try {
-        conn.loadSession()
+        await conn.loadSession()
+        main()
       } catch (e) {
         console.error(e)
       }
     }
     else if (e.selectedText === 'NEW SESSION') {
       try {
-        conn.newSession()
+        await conn.newSession()
+        main()
       } catch (e) {
         console.error(e)
       }
@@ -29,6 +31,7 @@ const loadMenu = () => {
     else if (e.selectedText === 'LOGOUT') {
       try {
         conn.logout()
+        loadMenu()
       } catch (e) {
         console.error(e)
       }
