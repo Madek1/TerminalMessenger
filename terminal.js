@@ -1,4 +1,4 @@
-const term = require( 'terminal-kit' ).terminal
+const term = require('terminal-kit').terminal
 const conn = require('./session/connection')
 const main = require('./src/main')
 term.grabInput()
@@ -31,7 +31,6 @@ const loadMenu = () => {
     else if (e.selectedText === 'LOGOUT') {
       try {
         conn.logout()
-        loadMenu()
       } catch (e) {
         console.error(e)
       }

@@ -17,6 +17,11 @@ class Connection {
   }
 
   new(email, pass) {
+    const readline = require("readline")
+    const rl = readline.createInterface({
+      input: process.stdin,
+      output: process.stdout
+    })
     term.clear()
     login({email, password: pass}, (err, api) => {
       if(err) {
@@ -57,11 +62,7 @@ class Connection {
   }
 
   logout() {
-    this.api.logout(err => {
-      if (err) {
-        throw new Error(err)
-      }
-    })
+    this.api.logout()
   }
 }
 
