@@ -6,7 +6,10 @@ term.grabInput()
 term.on('key', function(key, matches, data) {
     if (key === 'ESCAPE') loadMenu()
     // Detect CTRL-C and exit 'manually'
-    if (key === 'CTRL_C') process.exit()
+    if (key === 'CTRL_C') {
+      term.clear()
+      process.exit()
+    }
 })
 
 const loadMenu = () => {

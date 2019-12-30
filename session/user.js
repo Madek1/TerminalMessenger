@@ -1,16 +1,16 @@
 const conn = require('./connection')
 class User {
-  constructor() {
+  constructor(id) {
+    if (!id) {
+      id = conn.api.getCurrentUserID()
+    }
+    this.id = id
     this.api = conn.api
   }
 
-  get id() {
-    return this.api.getCurrentUserID()
-  }
-
-  getInfo(id = this.id) {
+  getInfo() {
     return new Promise((resolve, _reject) => {
-      this.api.getUserInfo(id, (err, res) => {
+      this.api.getUserInfo(this.id, (err, res) => {
         const keys = Object.keys(res)
         resolve(res[keys[0]])
       })
@@ -18,6 +18,4 @@ class User {
   }
 }
 
-const user = new User()
-
-module.exports = user
+module.exports = User
