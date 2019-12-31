@@ -3,7 +3,7 @@ const conn = require('./session/connection')
 const main = require('./src/main')
 term.grabInput()
 
-term.on('key', function(key, matches, data) {
+term.on('key', (key, matches, data) => {
     if (key === 'ESCAPE') loadMenu()
     // Detect CTRL-C and exit 'manually'
     if (key === 'CTRL_C') {
