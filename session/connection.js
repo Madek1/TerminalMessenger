@@ -66,11 +66,6 @@ class Connection {
           forceLogin: true,
           autoMarkDelivery: 'false'
         });
-
-        api.listen((err, e) => {
-          console.log(e.body)
-        })
-
         this.api = api
         fs.writeFileSync(process.env.SESSION_LOCATION, JSON.stringify(api.getAppState()))
         term.clear()
