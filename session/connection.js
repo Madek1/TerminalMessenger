@@ -53,6 +53,12 @@ class Connection {
           console.error(err)
           reject('Connection error')
         }
+        api.setOptions({
+          logLevel: "silent",
+          listenEvents: true,
+          forceLogin: true,
+          autoMarkDelivery: 'false'
+        });
         this.api = api
         fs.writeFileSync('appstate.json', JSON.stringify(api.getAppState()))
         term.clear()
