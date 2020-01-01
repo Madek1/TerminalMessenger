@@ -4,6 +4,7 @@
   "description": "Application to view deleted messages from Facebook Messenger",
   "main": "index.js",
   "scripts": {
+    "start": "node terminal.js",
     "test": "test"
   },
   "keywords": [

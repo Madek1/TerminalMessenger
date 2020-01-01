@@ -1,6 +1,6 @@
 const term = require('terminal-kit').terminal
 const conn = require('./session/connection')
-const main = require('./src/main')
+const threads = require('./src/threads')
 term.grabInput()
 
 term.on('key', (key, matches, data) => {
@@ -18,7 +18,7 @@ const loadMenu = () => {
     if (e.selectedText === 'LOAD SESSION') {
       try {
         await conn.loadSession()
-        main()
+        threads.main()
       } catch (e) {
         console.error(e)
       }
