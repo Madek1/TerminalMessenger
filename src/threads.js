@@ -70,6 +70,9 @@ class Threads {
     term.magenta('Name' + ' '.repeat(36) + 'Nickname\n')
     for (let {userID, nickname} of list.nicknames) {
       const user = new User(userID)
+      conn.api.getUserPhoto(userID, (err, e) => {
+        console.log('photo: ', e)
+      })
       const text = ((await user.getInfo()).name + ' '.repeat(40)).substr(0, 40)
       term.white(text, nickname, '\n')
     }
@@ -160,9 +163,11 @@ class Threads {
       })
       term.grey((user.name + ': ' + ' '.repeat(20)).substr(0, 20))
       term.white(mess.body, '\n')
-      if (mess.attachments.length > 0) {
-        for (let {url} of mess.attachments) {
-          term.green('➣ ', url, '\n')
+      if (mess.attachments) {
+        if (mess.attachments.length > 0) {
+          for (let {url} of mess.attachments) {
+            term.green('➣ ', url, '\n')
+          }
         }
       }
     }

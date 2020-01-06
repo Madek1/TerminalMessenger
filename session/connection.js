@@ -9,46 +9,53 @@ class Connection {
       term('Please enter your email: ')
       term.inputField((err, email) => {
         term('\nPlease enter your password: ')
-        term.inputField({echoChar: true}, (err, pass) => {
-          this.new(email, pass)
+        term.inputField({echoChar: true}, async (err, pass) => {
+          try {
+            await this.new(email, pass)
+            resolve()
+          } catch(e) {
+            reject()
+          }
         })
       })
     })
   }
 
   new(email, pass) {
-    const readline = require("readline")
-    const rl = readline.createInterface({
-      input: process.stdin,
-      output: process.stdout
-    })
-    term.clear()
-    login({email, password: pass}, (err, api) => {
-      if(err) {
-        switch (err.error) {
-            case 'login-approval':
-                console.log('Enter code > ');
-                rl.on('line', (line) => {
-                    err.continue(line);
-                    rl.close();
-                });
-                break;
-            default:
-                console.error(err);
-        }
-        return
-      }
-      this.api = api
-      fs.writeFileSync('appstate.json', JSON.stringify(api.getAppState()))
+    return new Promise((resolve, reject) => {
+      const readline = require("readline")
+      const rl = readline.createInterface({
+        input: process.stdin,
+        output: process.stdout
+      })
       term.clear()
-      resolve()
+      login({email, password: pass}, (err, api) => {
+        if(err) {
+          switch (err.error) {
+              case 'login-approval':
+                  console.log('Enter code > ');
+                  rl.on('line', (line) => {
+                      err.continue(line);
+                      rl.close();
+                  });
+                  break;
+              default:
+                  console.error(err);
+          }
+          return
+        }
+        this.api = api
+        fs.writeFileSync(process.env.SESSION_LOCATION, JSON.stringify(api.getAppState()))
+        term.clear()
+        resolve()
+      })
     })
   }
 
   loadSession() {
     return new Promise((resolve, reject) => {
       term.clear()
-      login({appState: JSON.parse(fs.readFileSync('appstate.json', 'utf8'))}, (err, api) => {
+      login({appState: JSON.parse(fs.readFileSync(process.env.SESSION_LOCATION , 'utf8'))}, (err, api) => {
         if(err) {
           console.error(err)
           reject('Connection error')
@@ -59,9 +66,15 @@ class Connection {
           forceLogin: true,
           autoMarkDelivery: 'false'
         });
+
+        api.listen((err, e) => {
+          console.log(e.body)
+        })
+
         this.api = api
-        fs.writeFileSync('appstate.json', JSON.stringify(api.getAppState()))
+        fs.writeFileSync(process.env.SESSION_LOCATION, JSON.stringify(api.getAppState()))
         term.clear()
+
         resolve()
       })
     })
