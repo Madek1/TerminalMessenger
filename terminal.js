@@ -1,9 +1,10 @@
+require('dotenv').config({path: '/home/michu/Desktop/git/unDeleted/.env'})
 const term = require('terminal-kit').terminal
 const conn = require('./session/connection')
-const main = require('./src/main')
+const threads = require('./src/threads')
 term.grabInput()
 
-term.on('key', function(key, matches, data) {
+term.on('key', (key, matches, data) => {
     if (key === 'ESCAPE') loadMenu()
     // Detect CTRL-C and exit 'manually'
     if (key === 'CTRL_C') {
@@ -18,7 +19,7 @@ const loadMenu = () => {
     if (e.selectedText === 'LOAD SESSION') {
       try {
         await conn.loadSession()
-        main()
+        threads.main()
       } catch (e) {
         console.error(e)
       }
