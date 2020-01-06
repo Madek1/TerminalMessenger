@@ -18,7 +18,8 @@
   "dependencies": {},
   "devDependencies": {
     "clear": "^0.1.0",
-    "facebook-chat-api": "^1.6.1",
+    "dotenv": "^8.2.0",
+    "facebook-chat-api": "github:Schmavery/facebook-chat-api",
     "terminal-kit": "^1.32.2",
     "terminal-table": "0.0.12"
   }

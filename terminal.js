@@ -1,3 +1,4 @@
+require('dotenv').config({path: '/home/michu/Desktop/git/unDeleted/.env'})
 const term = require('terminal-kit').terminal
 const conn = require('./session/connection')
 const threads = require('./src/threads')
