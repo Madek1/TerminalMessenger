@@ -70,9 +70,6 @@ class Threads {
     term.magenta('Name' + ' '.repeat(36) + 'Nickname\n')
     for (let {userID, nickname} of list.nicknames) {
       const user = new User(userID)
-      conn.api.getUserPhoto(userID, (err, e) => {
-        console.log('photo: ', e)
-      })
       const text = ((await user.getInfo()).name + ' '.repeat(40)).substr(0, 40)
       term.white(text, nickname, '\n')
     }
